@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-container {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .input-field::placeholder {
+            color: #999;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .divider-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0 12px;
+            font-size: 14px;
+        }
+
+        .social-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .signup-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .signup-link:hover {
+            opacity: 0.8;
+        }
+
+        .forgot-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            opacity: 0.8;
+        }
+    </style>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+    <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+</head>
+
+<body class="h-full">
+    <div class="h-full flex items-center justify-center p-4">
+        <div class="login-container w-full max-w-md"><!-- Logo & Header -->
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-2">Đăng Nhập</h1>
+                <p class="text-white text-opacity-80">Chào mừng bạn quay lại</p>
+            </div><!-- Form -->
+            <form action="/login" method="POST" class="space-y-4">
+
+                <!-- Email -->
+                <div>
+                    <input type="text" name="name" class="input-field w-full" placeholder="Email hoặc tên người dùng"
+                        required>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <input type="password" name="password" class="input-field w-full" placeholder="Mật khẩu" required>
+                </div>
+
+                <!-- Remember & Forgot -->
+                <div class="flex items-center justify-between pt-2">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember">
+                        <span>Nhớ tôi</span>
+                    </label>
+
+                    <a href="#" class="forgot-link">Quên mật khẩu?</a>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="login-btn mt-6">
+                    Đăng Nhập
+                </button>
+
+            </form>
+            <div class="divider">
+                <div class="divider-line"></div>
+                <div class="divider-text">
+                    hoặc
+                </div>
+                <div class="divider-line"></div>
+            </div><!-- Social Login -->
+            <div class="flex gap-3"><button class="social-btn"> <span>Google</span> </button> <button
+                    class="social-btn"> <span>GitHub</span> </button>
+            </div><!-- Sign Up Link -->
+            <div class="text-center mt-8">
+                <p class="text-white text-opacity-80">Chưa có tài khoản? <a href="#" class="signup-link">Đăng ký
+                        ngay</a></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                showNotification('Vui lòng điền đầy đủ thông tin', 'error');
+                return;
+            }
+
+            // Hiệu ứng submit
+            const form = document.querySelector('form');
+            const button = form.querySelector('button');
+            const originalText = button.textContent;
+
+            button.textContent = 'Đang xử lý...';
+            button.disabled = true;
+
+            // Giả lập xử lý
+            setTimeout(() => {
+                showNotification('✓ Đăng nhập thành công!', 'success');
+                button.textContent = originalText;
+                button.disabled = false;
+
+                // Reset form
+                form.reset();
+            }, 1500);
+        }
+
+        function showNotification(message, type) {
+            const existingNotif = document.querySelector('.notification');
+            if (existingNotif) existingNotif.remove();
+
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.textContent = message;
+
+            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            notif.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 14px 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                border-radius: 8px;
+                font-weight: 500;
+                animation: slideIn 0.3s ease-out;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            `;
+
+            document.body.appendChild(notif);
+
+            setTimeout(() => {
+                notif.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
+    </script>
+    <style>
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            to {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+        }
+    </style>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9d57588ef6b6099c',t:'MTc3MjM1OTU1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

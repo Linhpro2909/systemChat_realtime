@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Messenger</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .messenger-container {
+            display: flex;
+            height: 100%;
+            gap: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .sidebar-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: #667eea;
+        }
+
+        .icon-btn:hover {
+            background: #e8e8f0;
+            transform: scale(1.1);
+        }
+
+        .search-container {
+            padding: 16px 24px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 18px;
+            background: #f0f0f8;
+            border: 1px solid #e5e5f0;
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            background: #e8e8f8;
+            border-color: #667eea;
+            box-shadow: 0 0 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 12px;
+        }
+
+        .chat-item {
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-item:hover {
+            background: #f5f5fa;
+            transform: translateX(4px);
+        }
+
+        .chat-item.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 3px solid #667eea;
+            padding-left: 13px;
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-header-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .chat-name {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 15px;
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .chat-preview {
+            font-size: 13px;
+            color: #999;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            margin: 12px 12px 12px 0;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f9f9ff 0%, #f5f5fa 100%);
+        }
+
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .chat-user-name {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 16px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: linear-gradient(180deg, #fff 0%, #f9f9ff 100%);
+        }
+
+        .message {
+            display: flex;
+            gap: 8px;
+            animation: messageSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(16px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .message-bubble {
+            max-width: 55%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 15px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .message.received .message-bubble {
+            background: #e8eef8;
+            color: #1a1a1a;
+            border-radius: 20px 20px 20px 4px;
+        }
+
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border-radius: 20px 20px 4px 20px;
+        }
+
+        .chat-input-container {
+            padding: 18px 24px 24px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            background: #fff;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: #f0f0f8;
+            border: 1px solid #e5e5f0;
+            border-radius: 24px;
+            padding: 12px 18px;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper:focus-within {
+            background: #e8e8f8;
+            border-color: #667eea;
+            box-shadow: 0 0 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .message-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            resize: none;
+            max-height: 100px;
+            font-family: inherit;
+            color: #1a1a1a;
+        }
+
+        .message-input::placeholder {
+            color: #aaa;
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .send-btn:hover:not(:disabled) {
+            transform: scale(1.1) rotate(12deg);
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
+        }
+
+        .send-btn:disabled {
+            background: #d0d0d8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a72d0 0%, #6d428f 100%);
+        }
+    </style>
+    <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
+
+<body class="h-full">
+    <div class="messenger-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>Tin nhắn</h1>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Tìm kiếm Messenger">
+            </div>
+            <div class="chat-list">
+                <% if (listUser && listUser.length> 0) { %>
+                    <% listUser.forEach(function(user) { %>
+                        <div class="chat-item <%= (chattingWith && chattingWith.id == user.id) ? 'active' : '' %>"
+                            onclick="selectChat(this, '<%= user.name %>', '<%= user.id %>')">
+                            <div class="avatar">
+                                <%= user.name ? user.name.substring(0, 2).toUpperCase() : '??' %>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-header-text">
+                                    <div class="chat-name">
+                                        <%= user.name %>
+                                    </div>
+                                    <div class="chat-time">14:32</div>
+                                </div>
+                                <div class="chat-preview">Bấm để xem tin nhắn...</div>
+                            </div>
+                        </div>
+                        <% }); %>
+                            <% } %>
+            </div>
+        </div>
+
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="chat-user-info">
+                    <div class="avatar" style="width: 40px; height: 40px; font-size: 16px;">
+                        <%= chattingWith ? chattingWith.name.substring(0, 2).toUpperCase() : '??' %>
+                    </div>
+                    <div class="chat-user-name">
+                        <%= chattingWith ? chattingWith.name : 'Chọn một người' %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <% if (listMessages && listMessages.length> 0) { %>
+                    <% listMessages.forEach(function(msg) { %>
+                        <% let isMe=(msg.user_id_sent==currentUserId); let content=isMe ? msg.message_sent :
+                            msg.message_give; %>
+                            <% if (content) { %>
+                                <div class="message <%= isMe ? 'sent' : 'received' %>">
+                                    <div class="message-bubble">
+                                        <%= content %>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% }); %>
+                                        <% } %>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <input type="text" class="message-input" id="messageInput" placeholder="Aa"
+                        onkeypress="handleKeyPress(event)">
+                </div>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>
+                    <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16346272 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.837654326,3.0486314 1.15159189,3.99720772 L3.03521743,10.4382008 C3.03521743,10.5952982 3.19218622,10.7523956 3.50612381,10.7523956 L16.6915026,11.5378824 C16.6915026,11.5378824 17.1624089,11.5378824 17.1624089,12.0091746 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // --- KHỞI TẠO BIẾN TOÀN CỤC ---
+        const MY_ID = '<%= currentUserId %>';
+        let currentChatWithId = '<%= chattingWith ? chattingWith.id : "" %>';
+        const socket = io();
+
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+
+        // Cuộn xuống cuối khi load trang
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Thông báo cho Server biết mình là ai để nhận tin nhắn Realtime
+        socket.emit('join_chat', MY_ID);
+
+        // --- HÀM CHỌN NGƯỜI CHAT ---
+        async function selectChat(element, name, userId) {
+            // Đổi trạng thái Active Sidebar
+            document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            // Cập nhật Header
+            document.querySelector('.chat-user-name').innerText = name;
+            document.querySelector('.chat-user-info .avatar').innerText = name.substring(0, 2).toUpperCase();
+
+            // Cập nhật ID người đang chat
+            currentChatWithId = userId;
+
+            try {
+                const response = await fetch(`/get-messages/${userId}`);
+                const messages = await response.json();
+
+                const chatContainer = document.getElementById('chatMessages');
+                chatContainer.innerHTML = ''; // Xóa tin nhắn cũ
+
+                messages.forEach(msg => {
+                    // SỬA Ở ĐÂY: Dùng == để so sánh không phân biệt chuỗi/số
+                    // Và kiểm tra đúng tên cột id_sent từ database
+                    const isMe = (msg.id_sent == MY_ID);
+
+                    // Xác định nội dung tin nhắn (vì bảng của bạn có 2 cột nội dung)
+                    const content = isMe ? msg.message_sent : msg.message_give;
+
+                    if (content && content.trim() !== "") {
+                        const div = document.createElement('div');
+                        // Nếu isMe đúng thì dùng class 'sent' (bên phải), sai dùng 'received' (bên trái)
+                        div.className = `message ${isMe ? 'sent' : 'received'}`;
+                        div.innerHTML = `<div class="message-bubble">${escapeHtml(content)}</div>`;
+                        chatContainer.appendChild(div);
+                    }
+                });
+
+                // Cuộn xuống cuối
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            } catch (err) {
+                console.error("Lỗi render:", err);
+            }
+        }
+
+        // --- HÀM GỬI TIN NHẮN ---
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message || !currentChatWithId) return;
+
+            const data = {
+                senderId: MY_ID,
+                receiverId: currentChatWithId,
+                message: message
+            };
+
+            try {
+                // 1. Lưu vào MySQL
+                const response = await fetch('/send-message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // 2. Phát qua Socket cho người kia
+                    socket.emit('send_message', data);
+
+                    messageInput.value = '';
+                    sendBtn.disabled = true;
+                }
+            } catch (err) {
+                console.error("Lỗi gửi:", err);
+            }
+        }
+
+        // --- NHẬN TIN NHẮN REALTIME ---
+        socket.on('receive_message', (data) => {
+            // Chỉ hiển thị nếu thuộc hội thoại đang mở hoặc do chính mình gửi
+            if (data.senderId == currentChatWithId || data.senderId == MY_ID) {
+                renderMessage(data.message, data.senderId == MY_ID);
+            }
+        });
+
+        // Hàm phụ để vẽ tin nhắn
+        function renderMessage(text, isMe) {
+            const div = document.createElement('div');
+            div.className = `message ${isMe ? 'sent' : 'received'}`;
+            div.innerHTML = `<div class="message-bubble">${escapeHtml(text)}</div>`;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        messageInput.addEventListener('input', () => {
+            sendBtn.disabled = !messageInput.value.trim();
+        });
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+
+</html>
